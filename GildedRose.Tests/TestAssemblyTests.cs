@@ -2,83 +2,118 @@
 using GildedRose;
 using System.IO;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace GildedRose.Tests
 {
     
     public class TestAssemblyTests
     {
     
-        private  Program _app;
+        private readonly Program _app;
         public TestAssemblyTests()
         {
             var app = new Program()
                           {
                               Items = new List<Item>
                                           {
-                new Item { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 },
-                new Item { Name = "Aged Brie", SellIn = 2, Quality = 0 },
-                new Item { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7 },
-                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 },
-                new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 },
-                new Item
+                new() { Name = "+5 Dexterity Vest", SellIn = 10, Quality = 20 },
+                new() { Name = "Aged Brie", SellIn = 2, Quality = 0 },
+                new() { Name = "Elixir of the Mongoose", SellIn = 5, Quality = 7 },
+                new() { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 },
+                new() { Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80 },
+                new()
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 15,
                     Quality = 20
                 },
-                new Item
+                new()
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 10,
                     Quality = 49
                 },
-                new Item
+                new()
                 {
                     Name = "Backstage passes to a TAFKAL80ETC concert",
                     SellIn = 5,
                     Quality = 49
                 },
 				// this conjured item does not work properly yet
-				new Item { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 }
+				new() { Name = "Conjured Mana Cake", SellIn = 3, Quality = 6 }
                                           }
-
                           };
             _app = app;
         }
-
-        [Fact]
-        public void TestTheTruth()
-        {
-            Assert.True(true);
-        }
+        
         [Fact]
         public void Test_OpeningPrintStatement()
         {
-        //Given
-        var newActual = actual.Split(Environment.NewLine);
-        
-        //When
-        //Then
-        Assert.Equal("OMGHAI!", newActual[0]);
+            //Given
+            var writer = new StringWriter();
+
+            Console.SetOut(writer);
+
+            Program.Main(Array.Empty<string>());
+            var actual = writer.GetStringBuilder().ToString().Trim();
+            var final = actual.Split("\r\n");
+            //When
+            //Then
+            Assert.Equal("OMGHAI!", final[0]);
         }
 
         [Fact]
-        public void UpdateQuality_UpdateOnRagnoros_MakesNoChange()
+        public void UpdateQuality_UpdateOnRagnaros_MakesNoChange()
         {
         //Given
-        //using Program.Main(new string[0]);
+        var expected = new List<Item>
+        {
+            new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80},
+            new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = -1, Quality = 80}
+        };
         
-        var hand = _app.Items.Count;
-        Console.WriteLine(hand);
-        var expected = new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80};
         //When
-        for (int i = 0; i < 10; i++){_app.UpdateQuality();}
-        Item handORagno = _app.Items[3];
+        for (var i = 0; i < 10; i++){_app.UpdateQuality();}
+        var legendaryList = _app.Items.Where(i => i.Name == "Sulfuras, Hand of Ragnaros").Select(i => i).ToList();
         
         //Then
-        Assert.Equal(expected, handORagno);
+        Assert.Equal(expected[0].Name, legendaryList[0].Name);
+        Assert.Equal(expected[0].SellIn, legendaryList[0].SellIn);
+        Assert.Equal(expected[0].Quality, legendaryList[0].Quality);
+        Assert.Equal(expected[1].Name, legendaryList[1].Name);
+        Assert.Equal(expected[1].SellIn, legendaryList[1].SellIn);
+        Assert.Equal(expected[1].Quality, legendaryList[1].Quality);
+        }
         
+        [Fact]
+        public void Backstage_Passes_increases_in_Quality_as_sellIn_approaches_0()
+        {
+            var before = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
+            for (var i = 0; i < 10; i++){_app.UpdateQuality();}
+            var after = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
+            Assert.True(after > before);
+        }
+        
+        [Fact]
+        public void Backstage_Passes_Quality_increases_by_2_as_sellIn_lessThan_10()
+        {
+            var before = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
+            var expected = before + (1*4)  + (2 * 4) + 3;
+            for (var i = 0; i < 10; i++){_app.UpdateQuality();}
+            var after = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
+            Assert.Equal(expected,  after);
+        }
+        
+        [Fact]
+        public void Backstage_Passes_Quality_increases_by_3_as_sellIn_lessThan_5()
+        {
+            var before = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
+            for (var i = 0; i < 10; i++){_app.UpdateQuality();}
+            var after = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
+            Assert.True(after > before);
         }
     }
 }
