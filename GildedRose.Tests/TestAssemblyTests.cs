@@ -11,7 +11,7 @@ namespace GildedRose.Tests
     public class TestAssemblyTests
     {
     
-        private  Program _app;
+        private readonly Program _app;
         public TestAssemblyTests()
         {
             var app = new Program()
@@ -52,9 +52,9 @@ namespace GildedRose.Tests
         {
             //Given
             var writer = new StringWriter();
-
+        
             Console.SetOut(writer);
-
+        
             Program.Main(Array.Empty<string>());
             var actual = writer.GetStringBuilder().ToString().Trim();
             var final = actual.Split(Environment.NewLine);
