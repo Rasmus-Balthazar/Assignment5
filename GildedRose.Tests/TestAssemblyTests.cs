@@ -8,7 +8,9 @@ namespace GildedRose.Tests
     
     public class TestAssemblyTests
     {
-        public Program setUp()
+    
+        private  Program _app;
+        public TestAssemblyTests()
         {
             var app = new Program()
                           {
@@ -42,13 +44,7 @@ namespace GildedRose.Tests
                                           }
 
                           };
-            return app;
-        }
-    
-        private  Program _app;
-        public TestAssemblyTests()
-        {
-            _app = setUp();
+            _app = app;
         }
 
         [Fact]
