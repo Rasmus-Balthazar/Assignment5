@@ -58,7 +58,7 @@ namespace GildedRose.Tests
 
             Program.Main(Array.Empty<string>());
             var actual = writer.GetStringBuilder().ToString().Trim();
-            var final = actual.Split("\r\n");
+            var final = actual.Split(Environment.NewLine);
             //When
             //Then
             Assert.Equal("OMGHAI!", final[0]);
