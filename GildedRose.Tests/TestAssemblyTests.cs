@@ -11,7 +11,7 @@ namespace GildedRose.Tests
     public class TestAssemblyTests
     {
     
-        private  Program _app;
+        private readonly Program _app;
         public TestAssemblyTests()
         {
             var app = new Program()
