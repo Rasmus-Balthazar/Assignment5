@@ -1,19 +1,17 @@
-﻿using Xunit;
+using Xunit;
 using GildedRose;
 using System.IO;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace GildedRose.Tests
 {
     
     public class TestAssemblyTests
     {
     
-        private readonly Program _app;
+        private  Program _app;
         public TestAssemblyTests()
         {
             var app = new Program()
@@ -179,34 +177,20 @@ namespace GildedRose.Tests
             var after = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
             Assert.Equal(expected,  after);
         }
+        
         [Fact]
-        public void Test_OpeningPrintStatement()
+        public void Brie_IncreasDoubleInQuality_WhenSellInIsNegative()
         {
         //Given
-        var writer = new StringWriter();
-        //var reader = new StringReader("1");
-
-        System.Console.SetOut(writer);
-        //System.Console.SetIn(reader);
-
-        Program.Main(new string[0]);
-        string actual = writer.GetStringBuilder().ToString().Trim();
+        var expected = new Item{Name = "Aged Brie", SellIn = -3, Quality = 8};
         //When
-        //Then
-        Assert.Equal("OMGHAI!", actual);
+        for (int i = 0; i < 5; i++)
+        {
+            _app.UpdateQuality();
         }
-
-        [Fact]
-        public void UpdateQuality_UpdateOnRagnoros_MakesNoChange()
-        {
-        //Given
-        var app = new Program();
-        var expected = new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80};
-        //When
-        for (int i = 0; i < 10; i++){app.UpdateQuality();}
-        Item handORagno = app.Items[3];
+        var actual = _app.Items.Select(i => i).Where(i => i.Name.Equals("Aged Brie")).FirstOrDefault();
         //Then
-        Assert.Equal(expected, handORagno);
+        Assert.Equal(expected.Quality, actual.Quality);
         }
     }
 }
