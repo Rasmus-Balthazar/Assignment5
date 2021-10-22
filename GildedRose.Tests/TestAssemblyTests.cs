@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using GildedRose;
 using System.IO;
 using System;
