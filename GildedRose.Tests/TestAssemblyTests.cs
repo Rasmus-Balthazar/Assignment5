@@ -3,6 +3,7 @@ using GildedRose;
 using System.IO;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 namespace GildedRose.Tests
 {
     
@@ -52,33 +53,68 @@ namespace GildedRose.Tests
         {
             Assert.True(true);
         }
+
         [Fact]
-        public void Test_OpeningPrintStatement()
+        public void UpdateQuality_Quality_Is_Never_More_Than_50()
         {
+
         //Given
-        var newActual = actual.Split(Environment.NewLine);
-        
+        var qualityFiftyOne = new Item{Name = "FiftyOne", SellIn = 30, Quality = 51};
+        _app.Items.Add(qualityFiftyOne);
+
         //When
+        
+        var actual = _app.Items.Select(i => i).Where(i => i.Name == "FiftyOne").FirstOrDefault();
+        var expectedQuality = 50;
+        _app.UpdateQuality();
+
         //Then
-        Assert.Equal("OMGHAI!", newActual[0]);
+        Assert.Equal(expectedQuality, actual.Quality);
         }
 
         [Fact]
-        public void UpdateQuality_UpdateOnRagnoros_MakesNoChange()
+        public void UpdateQuality_quality_Cant_Be_A_Negative_Quality()
         {
         //Given
-        //using Program.Main(new string[0]);
-        
-        var hand = _app.Items.Count;
-        Console.WriteLine(hand);
-        var expected = new Item {Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80};
+        for(int i = 0; i < 7; i++){_app.UpdateQuality();}
+        var expected = 0;
+        var actual = _app.Items.Select(i => i).Where(i => i.Name == "Elixir of the Mongoose").FirstOrDefault();
         //When
-        for (int i = 0; i < 10; i++){_app.UpdateQuality();}
-        Item handORagno = _app.Items[3];
         
         //Then
-        Assert.Equal(expected, handORagno);
+        Assert.Equal(expected,actual.Quality);
+        }
+
+        [Fact]
+        public void updateQuality_given_SellIn_passed_quality_degrade_twice_as_fast()
+        {
+
+        //Given
+        var expected = 6;
+        var passedQuality = new Item{Name = "Elder Wand", SellIn = 0, Quality = 10};
+        _app.Items.Add(passedQuality);
+        _app.UpdateQuality();
+        _app.UpdateQuality();
+
+        //When
         
+        var elderWand = _app.Items.Select(i => i).Where(i => i.Name == "Elder Wand").FirstOrDefault();
+        var actual = elderWand.Quality;
+
+        //Then
+        Assert.Equal(expected, actual);
+        }
+        
+        [Fact]
+        public void Brie_IncreasenInQualityAfterUpdate()
+        {
+        //Given
+        var expected = new Item{Name = "Aged Brie", SellIn = 1, Quality = 1};
+        //When
+        _app.UpdateQuality();
+        var actual = _app.Items.Select(i => i).Where(i => i.Name.Equals("Aged Brie")).FirstOrDefault();
+        //Then
+        Assert.Equal(expected.Quality, actual.Quality);
         }
     }
 }
