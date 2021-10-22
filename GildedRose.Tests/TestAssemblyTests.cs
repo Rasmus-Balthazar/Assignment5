@@ -47,6 +47,22 @@ namespace GildedRose.Tests
                           };
             _app = app;
         }
+        
+        [Fact]
+        public void Test_OpeningPrintStatement()
+        {
+            //Given
+            var writer = new StringWriter();
+
+            Console.SetOut(writer);
+
+            Program.Main(Array.Empty<string>());
+            var actual = writer.GetStringBuilder().ToString().Trim();
+            var final = actual.Split("\r\n");
+            //When
+            //Then
+            Assert.Equal("OMGHAI!", final[0]);
+        }
 
         [Fact]
         public void UpdateQuality_Quality_Is_Never_More_Than_50()
