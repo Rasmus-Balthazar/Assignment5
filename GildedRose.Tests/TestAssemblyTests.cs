@@ -116,5 +116,31 @@ namespace GildedRose.Tests
         //Then
         Assert.Equal(expected.Quality, actual.Quality);
         }
+        
+        [Fact]
+        public void Brie_IncreasDoubleInQuality_WhenSellInIsNegative()
+        {
+        //Given
+        var expected = new Item{Name = "Aged Brie", SellIn = -3, Quality = 8};
+        //When
+        for (int i = 0; i < 5; i++)
+        {
+            _app.UpdateQuality();
+        }
+        var actual = _app.Items.Select(i => i).Where(i => i.Name.Equals("Aged Brie")).FirstOrDefault();
+        //Then
+        Assert.Equal(expected.Quality, actual.Quality);
+        }
+        [Fact]
+        public void OpeningPrintStatement_IsOMGHAI()
+        {
+        //Given
+        Program.Main(new string[0]);
+        var expected = "OMGHAI!";
+        //When
+        string actual = Console.ReadLine();
+        //Then
+        Assert.Equal(expected,actual);
+        }
     }
 }
