@@ -27,4 +27,8 @@
     <ProjectReference Include="..\GildedRose\GildedRose.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="coverage.json" />
+  </ItemGroup>
+
 </Project>
