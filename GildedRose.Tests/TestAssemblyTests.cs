@@ -158,17 +158,17 @@ namespace GildedRose.Tests
         }
         
         [Fact]
-        public void Backstage_Passes_Quality_increases_by_2_as_sellIn_lessThan_10()
+        public void Backstage_Passes_Quality_increases_by_2_as_sellIn_lessThan_11()
         {
             var before = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
-            var expected = before + (1*4)  + (2 * 6);
+            var expected = before + (1*5)  + (2 * 5);
             for (var i = 0; i < 10; i++){_app.UpdateQuality();}
             var after = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
             Assert.Equal(expected,  after);
         }
         
         [Fact]
-        public void Backstage_Passes_Quality_increases_by_3_as_sellIn_lessThan_5()
+        public void Backstage_Passes_Quality_increases_by_3_as_sellIn_lessThan_6()
         {
             var before = _app.Items.FirstOrDefault(i => i.Name.Contains("Backstage passes")).Quality;
             var expected = before + (1*5)  + (2 * 5) + (3*5);

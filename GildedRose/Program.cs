@@ -46,9 +46,9 @@ namespace GildedRose
             {
                 Console.WriteLine("-------- day " + i + " --------");
                 Console.WriteLine("name, sellIn, quality");
-                for (var j = 0; j < app.Items.Count; j++)
+                foreach (var I in app.Items)
                 {
-                    Console.WriteLine(app.Items[j].Name + ", " + app.Items[j].SellIn + ", " + app.Items[j].Quality);
+                    Console.WriteLine(I.Name + ", " + I.SellIn + ", " + I.Quality);
                 }
                 Console.WriteLine("");
                 app.UpdateQuality();
@@ -58,9 +58,9 @@ namespace GildedRose
 
         public void UpdateQuality()
         {
-            for (var i = 0; i < Items.Count; i++)
+            foreach (var I in Items)
             {
-                Items[i].UpdateQuality();
+                I.UpdateQuality();
             }
         }
     }
